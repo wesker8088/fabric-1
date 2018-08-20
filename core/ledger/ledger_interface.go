@@ -132,6 +132,9 @@ type HistoryQueryExecutor interface {
 	// GetHistoryForKey retrieves the history of values for a key.
 	// The returned ResultsIterator contains results of type *KeyModification which is defined in protos/ledger/queryresult.
 	GetHistoryForKey(namespace string, key string) (commonledger.ResultsIterator, error)
+
+	GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64)(commonledger.ResultsIterator, error)
+
 }
 
 // TxSimulator simulates a transaction on a consistent snapshot of the 'as recent state as possible'

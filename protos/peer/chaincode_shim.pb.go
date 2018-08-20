@@ -3,14 +3,14 @@
 
 package peer
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import "github.com/golang/protobuf/proto"
+import "fmt"
+import "math"
 import google_protobuf1 "github.com/golang/protobuf/ptypes/timestamp"
 
 import (
-	context "golang.org/x/net/context"
-	grpc "google.golang.org/grpc"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -21,25 +21,26 @@ var _ = math.Inf
 type ChaincodeMessage_Type int32
 
 const (
-	ChaincodeMessage_UNDEFINED           ChaincodeMessage_Type = 0
-	ChaincodeMessage_REGISTER            ChaincodeMessage_Type = 1
-	ChaincodeMessage_REGISTERED          ChaincodeMessage_Type = 2
-	ChaincodeMessage_INIT                ChaincodeMessage_Type = 3
-	ChaincodeMessage_READY               ChaincodeMessage_Type = 4
-	ChaincodeMessage_TRANSACTION         ChaincodeMessage_Type = 5
-	ChaincodeMessage_COMPLETED           ChaincodeMessage_Type = 6
-	ChaincodeMessage_ERROR               ChaincodeMessage_Type = 7
-	ChaincodeMessage_GET_STATE           ChaincodeMessage_Type = 8
-	ChaincodeMessage_PUT_STATE           ChaincodeMessage_Type = 9
-	ChaincodeMessage_DEL_STATE           ChaincodeMessage_Type = 10
-	ChaincodeMessage_INVOKE_CHAINCODE    ChaincodeMessage_Type = 11
-	ChaincodeMessage_RESPONSE            ChaincodeMessage_Type = 13
-	ChaincodeMessage_GET_STATE_BY_RANGE  ChaincodeMessage_Type = 14
-	ChaincodeMessage_GET_QUERY_RESULT    ChaincodeMessage_Type = 15
-	ChaincodeMessage_QUERY_STATE_NEXT    ChaincodeMessage_Type = 16
-	ChaincodeMessage_QUERY_STATE_CLOSE   ChaincodeMessage_Type = 17
-	ChaincodeMessage_KEEPALIVE           ChaincodeMessage_Type = 18
-	ChaincodeMessage_GET_HISTORY_FOR_KEY ChaincodeMessage_Type = 19
+	ChaincodeMessage_UNDEFINED                   ChaincodeMessage_Type = 0
+	ChaincodeMessage_REGISTER                    ChaincodeMessage_Type = 1
+	ChaincodeMessage_REGISTERED                  ChaincodeMessage_Type = 2
+	ChaincodeMessage_INIT                        ChaincodeMessage_Type = 3
+	ChaincodeMessage_READY                       ChaincodeMessage_Type = 4
+	ChaincodeMessage_TRANSACTION                 ChaincodeMessage_Type = 5
+	ChaincodeMessage_COMPLETED                   ChaincodeMessage_Type = 6
+	ChaincodeMessage_ERROR                       ChaincodeMessage_Type = 7
+	ChaincodeMessage_GET_STATE                   ChaincodeMessage_Type = 8
+	ChaincodeMessage_PUT_STATE                   ChaincodeMessage_Type = 9
+	ChaincodeMessage_DEL_STATE                   ChaincodeMessage_Type = 10
+	ChaincodeMessage_INVOKE_CHAINCODE            ChaincodeMessage_Type = 11
+	ChaincodeMessage_RESPONSE                    ChaincodeMessage_Type = 13
+	ChaincodeMessage_GET_STATE_BY_RANGE          ChaincodeMessage_Type = 14
+	ChaincodeMessage_GET_QUERY_RESULT            ChaincodeMessage_Type = 15
+	ChaincodeMessage_QUERY_STATE_NEXT            ChaincodeMessage_Type = 16
+	ChaincodeMessage_QUERY_STATE_CLOSE           ChaincodeMessage_Type = 17
+	ChaincodeMessage_KEEPALIVE                   ChaincodeMessage_Type = 18
+	ChaincodeMessage_GET_HISTORY_FOR_KEY         ChaincodeMessage_Type = 19
+	ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE ChaincodeMessage_Type = 20
 )
 
 var ChaincodeMessage_Type_name = map[int32]string{
@@ -62,27 +63,29 @@ var ChaincodeMessage_Type_name = map[int32]string{
 	17: "QUERY_STATE_CLOSE",
 	18: "KEEPALIVE",
 	19: "GET_HISTORY_FOR_KEY",
+	20: "GET_HISTORY_FOR_KEY_BY_PAGE",
 }
 var ChaincodeMessage_Type_value = map[string]int32{
-	"UNDEFINED":           0,
-	"REGISTER":            1,
-	"REGISTERED":          2,
-	"INIT":                3,
-	"READY":               4,
-	"TRANSACTION":         5,
-	"COMPLETED":           6,
-	"ERROR":               7,
-	"GET_STATE":           8,
-	"PUT_STATE":           9,
-	"DEL_STATE":           10,
-	"INVOKE_CHAINCODE":    11,
-	"RESPONSE":            13,
-	"GET_STATE_BY_RANGE":  14,
-	"GET_QUERY_RESULT":    15,
-	"QUERY_STATE_NEXT":    16,
-	"QUERY_STATE_CLOSE":   17,
-	"KEEPALIVE":           18,
-	"GET_HISTORY_FOR_KEY": 19,
+	"UNDEFINED":                   0,
+	"REGISTER":                    1,
+	"REGISTERED":                  2,
+	"INIT":                        3,
+	"READY":                       4,
+	"TRANSACTION":                 5,
+	"COMPLETED":                   6,
+	"ERROR":                       7,
+	"GET_STATE":                   8,
+	"PUT_STATE":                   9,
+	"DEL_STATE":                   10,
+	"INVOKE_CHAINCODE":            11,
+	"RESPONSE":                    13,
+	"GET_STATE_BY_RANGE":          14,
+	"GET_QUERY_RESULT":            15,
+	"QUERY_STATE_NEXT":            16,
+	"QUERY_STATE_CLOSE":           17,
+	"KEEPALIVE":                   18,
+	"GET_HISTORY_FOR_KEY":         19,
+	"GET_HISTORY_FOR_KEY_BY_PAGE": 20,
 }
 
 func (x ChaincodeMessage_Type) String() string {
@@ -310,6 +313,38 @@ func (m *GetHistoryForKey) GetKey() string {
 	return ""
 }
 
+type GetHistoryForKeyByPage struct {
+	Key         string `protobuf:"bytes,1,opt,name=key" json:"key,omitempty"`
+	CurrentPage int64  `protobuf:"bytes,1,opt,name=currentPage" json:"currentPage,omitempty"`
+	PageSize    int64  `protobuf:"bytes,1,opt,name=pageSize" json:"pageSize,omitempty"`
+}
+
+func (m *GetHistoryForKeyByPage) Reset()                    { *m = GetHistoryForKeyByPage{} }
+func (m *GetHistoryForKeyByPage) String() string            { return proto.CompactTextString(m) }
+func (*GetHistoryForKeyByPage) ProtoMessage()               {}
+func (*GetHistoryForKeyByPage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{11} }
+
+func (m *GetHistoryForKeyByPage) GetKey() string {
+	if m != nil {
+		return m.Key
+	}
+	return ""
+}
+
+func (m *GetHistoryForKeyByPage) GetCurrentPage() int64 {
+	if m != nil {
+		return m.CurrentPage
+	}
+	return 0
+}
+
+func (m *GetHistoryForKeyByPage) GetPageSize() int64 {
+	if m != nil {
+		return m.PageSize
+	}
+	return 0
+}
+
 type QueryStateNext struct {
 	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 }
@@ -398,6 +433,7 @@ func init() {
 	proto.RegisterType((*GetStateByRange)(nil), "protos.GetStateByRange")
 	proto.RegisterType((*GetQueryResult)(nil), "protos.GetQueryResult")
 	proto.RegisterType((*GetHistoryForKey)(nil), "protos.GetHistoryForKey")
+	proto.RegisterType((*GetHistoryForKeyByPage)(nil), "protos.GetHistoryForKeyByPage")
 	proto.RegisterType((*QueryStateNext)(nil), "protos.QueryStateNext")
 	proto.RegisterType((*QueryStateClose)(nil), "protos.QueryStateClose")
 	proto.RegisterType((*QueryResultBytes)(nil), "protos.QueryResultBytes")

@@ -30,6 +30,7 @@ import (
 	"github.com/hyperledger/fabric/protos/ledger/queryresult"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/spf13/viper"
+	"fmt"
 )
 
 func TestMain(m *testing.M) {
@@ -265,4 +266,130 @@ func TestGenesisBlockNoError(t *testing.T) {
 	testutil.AssertNoError(t, err, "")
 	err = env.testHistoryDB.Commit(block)
 	testutil.AssertNoError(t, err, "")
+}
+
+func TestHistoryForKeyPage(t *testing.T) {
+
+	env := newTestHistoryEnv(t)
+	defer env.cleanup()
+	provider := env.testBlockStorageEnv.provider
+	ledger1id := "ledger1"
+	store1, err := provider.OpenBlockStore(ledger1id)
+	testutil.AssertNoError(t, err, "Error upon provider.OpenBlockStore()")
+	defer store1.Shutdown()
+
+	bg, gb := testutil.NewBlockGenerator(t, ledger1id, false)
+	testutil.AssertNoError(t, store1.AddBlock(gb), "")
+	testutil.AssertNoError(t, env.testHistoryDB.Commit(gb), "")
+
+	//block1
+	txid := util2.GenerateUUID()
+	simulator, _ := env.txmgr.NewTxSimulator(txid)
+	value1 := []byte("value1")
+	simulator.SetState("ns1", "key7", value1)
+	simulator.Done()
+	simRes, _ := simulator.GetTxSimulationResults()
+	pubSimResBytes, _ := simRes.GetPubSimulationBytes()
+	block1 := bg.NextBlock([][]byte{pubSimResBytes})
+	err = store1.AddBlock(block1)
+	testutil.AssertNoError(t, err, "")
+	err = env.testHistoryDB.Commit(block1)
+	testutil.AssertNoError(t, err, "")
+
+	//block2 tran1
+	simulationResults := [][]byte{}
+	txid = util2.GenerateUUID()
+	simulator, _ = env.txmgr.NewTxSimulator(txid)
+	value2 := []byte("value2")
+	simulator.SetState("ns1", "key7", value2)
+	simulator.Done()
+	simRes, _ = simulator.GetTxSimulationResults()
+	pubSimResBytes, _ = simRes.GetPubSimulationBytes()
+	simulationResults = append(simulationResults, pubSimResBytes)
+	//block2 tran2
+	txid2 := util2.GenerateUUID()
+	simulator2, _ := env.txmgr.NewTxSimulator(txid2)
+	value3 := []byte("value3")
+	simulator2.SetState("ns1", "key7", value3)
+	simulator2.Done()
+	simRes2, _ := simulator2.GetTxSimulationResults()
+	pubSimResBytes2, _ := simRes2.GetPubSimulationBytes()
+	simulationResults = append(simulationResults, pubSimResBytes2)
+
+	// block2 tran3
+	txid3 := util2.GenerateUUID()
+	simulator3, _ := env.txmgr.NewTxSimulator(txid3)
+	simulator3.SetState("ns1", "key7", []byte("value4"))
+	simulator3.Done()
+	simRes3, _ := simulator3.GetTxSimulationResults()
+	pubSimResBytes3, _ := simRes3.GetPubSimulationBytes()
+	simulationResults = append(simulationResults, pubSimResBytes3)
+	block2 := bg.NextBlock(simulationResults)
+	err = store1.AddBlock(block2)
+	testutil.AssertNoError(t, err, "")
+	err = env.testHistoryDB.Commit(block2)
+	testutil.AssertNoError(t, err, "")
+
+	//block3
+	txid = util2.GenerateUUID()
+	simulator, _ = env.txmgr.NewTxSimulator(txid)
+	simulator.DeleteState("ns1", "key7")
+	simulator.Done()
+	simRes, _ = simulator.GetTxSimulationResults()
+	pubSimResBytes, _ = simRes.GetPubSimulationBytes()
+	block3 := bg.NextBlock([][]byte{pubSimResBytes})
+	err = store1.AddBlock(block3)
+
+	testutil.AssertNoError(t, err, "")
+	err = env.testHistoryDB.Commit(block3)
+	testutil.AssertNoError(t, err, "")
+	t.Logf("Inserted all 3 blocks")
+
+	qhistory, err := env.testHistoryDB.NewHistoryQueryExecutor(store1)
+	testutil.AssertNoError(t, err, "Error upon NewHistoryQueryExecutor")
+
+	/*itr, err2 := qhistory.GetHistoryForKey("ns1", "key7")
+	testutil.AssertNoError(t, err2, "Error upon GetHistoryForKey()")*/
+
+	itr2, err3 := qhistory.GetHistoryForKeyByPage("ns1", "key7", 2, 3)
+	if itr2 == nil {
+		fmt.Println("itr2 is nill")
+	}
+
+	if err3 != nil {
+		t.Log("err3:", err3)
+	}
+
+	count := 0
+	for {
+
+		kmod, err4 := itr2.Next()
+		if err4 != nil {
+			t.Logf("err", err4)
+		}
+		if kmod == nil {
+			fmt.Println("kmod is nil ")
+			break
+		}
+
+		txid = kmod.(*queryresult.KeyModification).TxId
+		retrievedValue := kmod.(*queryresult.KeyModification).Value
+		retrievedTimestamp := kmod.(*queryresult.KeyModification).Timestamp
+		//retrievedIsDelete := kmod.(*queryresult.KeyModification).IsDelete
+		fmt.Println("Retrieved history record for key=key7 at TxId=%s with value %v and timestamp %v",
+			txid, retrievedValue, retrievedTimestamp)
+		count++
+		/*if count != 5 {
+			expectedValue := []byte("value" + strconv.Itoa(count))
+			testutil.AssertEquals(t, retrievedValue, expectedValue)
+			testutil.AssertNotEquals(t, retrievedTimestamp, nil)
+			testutil.AssertEquals(t, retrievedIsDelete, false)
+		} else {
+			testutil.AssertEquals(t, retrievedValue, nil)
+			testutil.AssertNotEquals(t, retrievedTimestamp, nil)
+			testutil.AssertEquals(t, retrievedIsDelete, true)
+		}*/
+
+	}
+	// testutil.AssertEquals(t, count, 5)
 }

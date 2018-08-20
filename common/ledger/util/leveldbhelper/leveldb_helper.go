@@ -26,6 +26,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	goleveldbutil "github.com/syndtr/goleveldb/leveldb/util"
+	"github.com/hyperledger/fabric/core/ledger/kvledger/history/historydb"
 )
 
 var logger = flogging.MustGetLogger("leveldbhelper")
@@ -152,6 +153,64 @@ func (dbInst *DB) GetIterator(startKey []byte, endKey []byte) iterator.Iterator 
 	return dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKey, Limit: endKey}, dbInst.readOpts)
 }
 
+// Extend the function of GetIterator
+// Add page searching
+// by xiaozhun 20180816
+func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage int64, pageSize int64) iterator.Iterator {
+	itr := dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKey, Limit: endKey}, dbInst.readOpts)
+	itr2 := dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKey, Limit: endKey}, dbInst.readOpts)
+
+	var (
+		count        int64
+		count2       int64
+		startKeyPage []byte
+		endKeyPage   []byte
+	)
+	startIndex := (currentPage - 1) * pageSize
+	endIndex := currentPage*pageSize - 1
+
+	for {
+		if itr.Next() {
+			if count == startIndex {
+				startKeyPage = itr.Key()
+				//bl, tn := GetBlockInfo(startKeyPage)
+				//fmt.Println("count:", count, " ,blockNo:", bl, " ,tranNo:", tn)
+				break
+			}
+			count++
+
+		} else {
+			break
+		}
+
+	}
+
+	for {
+
+		if itr2.Next() {
+			if count2 == endIndex+1 {
+				endKeyPage = itr2.Key()
+				//bl, tn := GetBlockInfo(endKeyPage)
+				//fmt.Println("count2:", count2, " ,blockNo:", bl, " ,tranNo:", tn)
+
+				break
+			}
+			count2++
+		} else {
+			break
+		}
+
+	}
+
+	if startKeyPage == nil {
+		fmt.Println("startKeyPage is nil ")
+		return nil
+	}
+
+	return dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKeyPage, Limit: endKeyPage}, dbInst.readOpts)
+
+}
+
 // WriteBatch writes a batch
 func (dbInst *DB) WriteBatch(batch *leveldb.Batch, sync bool) error {
 	wo := dbInst.writeOptsNoSync
@@ -162,4 +221,17 @@ func (dbInst *DB) WriteBatch(batch *leveldb.Batch, sync bool) error {
 		return err
 	}
 	return nil
+}
+
+func GetBlockInfo(key []byte) (blockNo uint64, tranNo uint64) {
+
+	_, startKeyPageBytes2 := historydb.SplitCompositeHistoryKey(key, []byte{0x00})
+	_, temp2 := historydb.SplitCompositeHistoryKey(startKeyPageBytes2, []byte{0x00})
+	_, blockNumTranNumBytes2 := historydb.SplitCompositeHistoryKey(temp2, []byte{0x00})
+	blockNum2, bytesConsumed2 := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes2)
+	tranNum2, _ := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes2[bytesConsumed2:])
+	//fmt.Println("  blockNumTranNum %v:%v\n", blockNum2, tranNum2)
+
+	return blockNum2, tranNum2
+
 }

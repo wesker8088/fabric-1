@@ -29,6 +29,7 @@ import (
 	"github.com/hyperledger/fabric/protos/ledger/queryresult"
 	putils "github.com/hyperledger/fabric/protos/utils"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
+	"fmt"
 )
 
 // LevelHistoryDBQueryExecutor is a query executor against the LevelDB history DB
@@ -52,6 +53,23 @@ func (q *LevelHistoryDBQueryExecutor) GetHistoryForKey(namespace string, key str
 	// range scan to find any history records starting with namespace~key
 	dbItr := q.historyDB.db.GetIterator(compositeStartKey, compositeEndKey)
 	return newHistoryScanner(compositeStartKey, namespace, key, dbItr, q.blockStore), nil
+}
+
+
+func (q *LevelHistoryDBQueryExecutor) GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64) (commonledger.ResultsIterator, error) {
+
+	if ledgerconfig.IsHistoryDBEnabled() == false {
+		return nil, errors.New("History tracking not enabled - historyDatabase is false")
+	}
+
+	var compositeStartKey []byte
+	var compositeEndKey []byte
+	compositeStartKey = historydb.ConstructPartialCompositeHistoryKey(namespace, key, false)
+	compositeEndKey = historydb.ConstructPartialCompositeHistoryKey(namespace, key, true)
+	// range scan to find any history records starting with namespace~key
+	dbItr := q.historyDB.db.GetIteratorByPage(compositeStartKey, compositeEndKey, currentPage, pageSize)
+	return newHistoryScanner(compositeStartKey, namespace, key, dbItr, q.blockStore), nil
+
 }
 
 //historyScanner implements ResultsIterator for iterating through history results
@@ -78,6 +96,9 @@ func (scanner *historyScanner) Next() (commonledger.QueryResult, error) {
 	_, blockNumTranNumBytes := historydb.SplitCompositeHistoryKey(historyKey, scanner.compositePartialKey)
 	blockNum, bytesConsumed := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes[0:])
 	tranNum, _ := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes[bytesConsumed:])
+	fmt.Println("Found history record for namespace:%s key:%s at blockNumTranNum %v:%v\n",
+		scanner.namespace, scanner.key, blockNum, tranNum)
+
 	logger.Debugf("Found history record for namespace:%s key:%s at blockNumTranNum %v:%v\n",
 		scanner.namespace, scanner.key, blockNum, tranNum)
 
