@@ -160,7 +160,7 @@ type ChaincodeStubInterface interface {
 	// update ledger, and should limit use to read-only chaincode operations.
 	GetHistoryForKey(key string) (HistoryQueryIteratorInterface, error)
 
-	GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64)(HistoryQueryIteratorInterface, error)
+	GetHistoryForKeyByPage( key string, currentPage int64, pageSize int64)(HistoryQueryIteratorInterface, error)
 	// GetPrivateData returns the value of the specified `key` from the specified
 	// `collection`. Note that GetPrivateData doesn't read data from the
 	// private writeset, which has not been committed to the `collection`. In
