@@ -566,6 +566,18 @@ func (stub *ChaincodeStub) GetHistoryForKey(key string) (HistoryQueryIteratorInt
 	return &HistoryQueryIterator{CommonIterator: &CommonIterator{stub.handler, stub.ChannelId, stub.TxID, response, 0}}, nil
 }
 
+
+func (stub *ChaincodeStub) GetHistoryForKeyByPage(key string, currentPage int64, pageSize int64) (HistoryQueryIteratorInterface, error) {
+
+	response, err := stub.handler.handleGetHistoryForKeyByPage(key, currentPage, pageSize, stub.ChannelId, stub.TxID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &HistoryQueryIterator{CommonIterator: &CommonIterator{stub.handler, stub.ChannelId, stub.TxID, response, 0}}, nil
+
+}
+
 //CreateCompositeKey documentation can be found in interfaces.go
 func (stub *ChaincodeStub) CreateCompositeKey(objectType string, attributes []string) (string, error) {
 	return createCompositeKey(objectType, attributes)

@@ -201,6 +201,8 @@ func (h *Handler) handleMessageReadyState(msg *pb.ChaincodeMessage) error {
 		go h.HandleTransaction(msg, h.HandleGetQueryResult)
 	case pb.ChaincodeMessage_GET_HISTORY_FOR_KEY:
 		go h.HandleTransaction(msg, h.HandleGetHistoryForKey)
+	case pb.ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE:
+		go h.HandleTransaction(msg, h.HandleGetHistoryForKeyByPage)
 	case pb.ChaincodeMessage_QUERY_STATE_NEXT:
 		go h.HandleTransaction(msg, h.HandleQueryStateNext)
 	case pb.ChaincodeMessage_QUERY_STATE_CLOSE:
@@ -697,6 +699,42 @@ func (h *Handler) HandleGetHistoryForKey(msg *pb.ChaincodeMessage, txContext *Tr
 	}
 
 	historyIter, err := txContext.HistoryQueryExecutor.GetHistoryForKey(chaincodeName, getHistoryForKey.Key)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	txContext.InitializeQueryContext(iterID, historyIter)
+	payload, err := h.QueryResponseBuilder.BuildQueryResponse(txContext, historyIter, iterID)
+	if err != nil {
+		txContext.CleanupQueryContext(iterID)
+		return nil, errors.WithStack(err)
+	}
+
+	payloadBytes, err := proto.Marshal(payload)
+	if err != nil {
+		txContext.CleanupQueryContext(iterID)
+		return nil, errors.Wrap(err, "marshal failed")
+	}
+
+	chaincodeLogger.Debugf("Got keys and values. Sending %s", pb.ChaincodeMessage_RESPONSE)
+	return &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: payloadBytes, Txid: msg.Txid, ChannelId: msg.ChannelId}, nil
+}
+
+
+// Handles query to ledger history db
+// Add function query by page
+// by xiaozhun 20180817
+func (h *Handler) HandleGetHistoryForKeyByPage(msg *pb.ChaincodeMessage, txContext *TransactionContext) (*pb.ChaincodeMessage, error) {
+	iterID := h.UUIDGenerator.New()
+	chaincodeName := h.ChaincodeName()
+
+	getHistoryForKeyByPage := &pb.GetHistoryForKeyByPage{}
+	err := proto.Unmarshal(msg.Payload, getHistoryForKeyByPage)
+	if err != nil {
+		return nil, errors.Wrap(err, "unmarshal failed")
+	}
+
+	historyIter, err := txContext.HistoryQueryExecutor.GetHistoryForKeyByPage(chaincodeName, getHistoryForKeyByPage.Key, getHistoryForKeyByPage.CurrentPage, getHistoryForKeyByPage.PageSize)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
