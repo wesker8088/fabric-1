@@ -281,7 +281,7 @@ func (stub *MockStub) GetHistoryForKey(key string) (HistoryQueryIteratorInterfac
 	return nil, errors.New("not implemented")
 }
 
-func (stub *MockStub) GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64) (HistoryQueryIteratorInterface, error) {
+func (stub *MockStub) GetHistoryForKeyByPage(key string, currentPage int64, pageSize int64) (HistoryQueryIteratorInterface, error) {
 	return nil, errors.New("not implemented")
 }
 
