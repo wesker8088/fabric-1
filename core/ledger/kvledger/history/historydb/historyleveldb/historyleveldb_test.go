@@ -351,7 +351,7 @@ func TestHistoryForKeyPage(t *testing.T) {
 	/*itr, err2 := qhistory.GetHistoryForKey("ns1", "key7")
 	testutil.AssertNoError(t, err2, "Error upon GetHistoryForKey()")*/
 
-	itr2, err3 := qhistory.GetHistoryForKeyByPage("ns1", "key7", 2, 3)
+	itr2, err3 := qhistory.GetHistoryForKeyByPage("ns1", "key7", 2, 1)
 	if itr2 == nil {
 		fmt.Println("itr2 is nill")
 	}
