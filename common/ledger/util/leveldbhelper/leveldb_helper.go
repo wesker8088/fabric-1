@@ -157,6 +157,9 @@ func (dbInst *DB) GetIterator(startKey []byte, endKey []byte) iterator.Iterator 
 // Add page searching
 // by xiaozhun 20180816
 func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage int64, pageSize int64) iterator.Iterator {
+
+	fmt.Println("#### leveldb_helper  :GetIteratorByPage start ##### ")
+
 	itr := dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKey, Limit: endKey}, dbInst.readOpts)
 	itr2 := dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKey, Limit: endKey}, dbInst.readOpts)
 

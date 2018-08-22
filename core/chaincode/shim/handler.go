@@ -611,7 +611,7 @@ func (handler *Handler) handleGetHistoryForKey(key string, channelId string, txi
 
 
 func (handler *Handler) handleGetHistoryForKeyByPage(key string, currentPage int64, pageSize int64, channelId string, txid string) (*pb.QueryResponse, error) {
-
+fmt.Println("#### shim handleGetHistoryForKeyByPage start #####")
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error
@@ -627,6 +627,7 @@ func (handler *Handler) handleGetHistoryForKeyByPage(key string, currentPage int
 	chaincodeLogger.Debugf("[%s] Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE)
 
 	var responseMsg pb.ChaincodeMessage
+	fmt.Println("#### shim handler.sendReceive before #####")
 
 	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
 		chaincodeLogger.Errorf("[%s] error sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE)

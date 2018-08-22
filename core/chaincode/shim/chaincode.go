@@ -569,10 +569,13 @@ func (stub *ChaincodeStub) GetHistoryForKey(key string) (HistoryQueryIteratorInt
 
 func (stub *ChaincodeStub) GetHistoryForKeyByPage(key string, currentPage int64, pageSize int64) (HistoryQueryIteratorInterface, error) {
 
+
+	fmt.Println("###### GetHistoryForKeyByPage start ###### ")
 	response, err := stub.handler.handleGetHistoryForKeyByPage(key, currentPage, pageSize, stub.ChannelId, stub.TxID)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("###### GetHistoryForKeyByPage end ###### ")
 
 	return &HistoryQueryIterator{CommonIterator: &CommonIterator{stub.handler, stub.ChannelId, stub.TxID, response, 0}}, nil
 

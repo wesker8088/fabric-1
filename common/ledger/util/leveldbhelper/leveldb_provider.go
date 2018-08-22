@@ -22,6 +22,7 @@ import (
 
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
+	"fmt"
 )
 
 var dbNameKeySep = []byte{0x00}
@@ -110,9 +111,11 @@ func (h *DBHandle) GetIterator(startKey []byte, endKey []byte) *Iterator {
 	return &Iterator{h.db.GetIterator(sKey, eKey)}
 }
 
-
 // by xz 20180817
 func (h *DBHandle) GetIteratorByPage(startKey []byte, endKey []byte, currentPage int64, pageSize int64) *Iterator {
+
+	fmt.Println("#### leveldb_provider  :GetIteratorByPage start ##### ")
+
 	sKey := constructLevelKey(h.dbName, startKey)
 	eKey := constructLevelKey(h.dbName, endKey)
 	if endKey == nil {
@@ -120,8 +123,9 @@ func (h *DBHandle) GetIteratorByPage(startKey []byte, endKey []byte, currentPage
 		eKey[len(eKey)-1] = lastKeyIndicator
 	}
 	logger.Debugf("Getting iterator for range [%#v] - [%#v]", sKey, eKey)
-	return &Iterator{h.db.GetIteratorByPage(sKey, eKey,currentPage,pageSize)}
+	return &Iterator{h.db.GetIteratorByPage(sKey, eKey, currentPage, pageSize)}
 }
+
 // UpdateBatch encloses the details of multiple `updates`
 type UpdateBatch struct {
 	KVs map[string][]byte

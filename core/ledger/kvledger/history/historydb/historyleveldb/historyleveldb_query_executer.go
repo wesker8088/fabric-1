@@ -58,6 +58,9 @@ func (q *LevelHistoryDBQueryExecutor) GetHistoryForKey(namespace string, key str
 
 func (q *LevelHistoryDBQueryExecutor) GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64) (commonledger.ResultsIterator, error) {
 
+
+	fmt.Println("#### query_executer :GetHistoryForKeyByPage start ##### ")
+
 	if ledgerconfig.IsHistoryDBEnabled() == false {
 		return nil, errors.New("History tracking not enabled - historyDatabase is false")
 	}

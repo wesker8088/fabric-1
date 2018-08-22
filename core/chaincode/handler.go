@@ -182,6 +182,9 @@ func (h *Handler) handleMessageCreatedState(msg *pb.ChaincodeMessage) error {
 }
 
 func (h *Handler) handleMessageReadyState(msg *pb.ChaincodeMessage) error {
+
+	fmt.Println("### handleMessageReadyState start ### ")
+
 	switch msg.Type {
 	case pb.ChaincodeMessage_COMPLETED, pb.ChaincodeMessage_ERROR:
 		h.Notify(msg)
@@ -355,6 +358,8 @@ func (h *Handler) deregister() {
 }
 
 func (h *Handler) ProcessStream(stream ccintf.ChaincodeStream) error {
+
+	fmt.Println("### ProcessStream start ### ")
 	defer h.deregister()
 
 	h.chatStream = stream
@@ -725,6 +730,10 @@ func (h *Handler) HandleGetHistoryForKey(msg *pb.ChaincodeMessage, txContext *Tr
 // Add function query by page
 // by xiaozhun 20180817
 func (h *Handler) HandleGetHistoryForKeyByPage(msg *pb.ChaincodeMessage, txContext *TransactionContext) (*pb.ChaincodeMessage, error) {
+
+
+	fmt.Println(" ##### chaincode HandleGetHistoryForKeyByPage  #### ")
+
 	iterID := h.UUIDGenerator.New()
 	chaincodeName := h.ChaincodeName()
 
