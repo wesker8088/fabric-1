@@ -99,7 +99,7 @@ func (scanner *historyScanner) Next() (commonledger.QueryResult, error) {
 	_, blockNumTranNumBytes := historydb.SplitCompositeHistoryKey(historyKey, scanner.compositePartialKey)
 	blockNum, bytesConsumed := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes[0:])
 	tranNum, _ := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes[bytesConsumed:])
-	fmt.Println("Found history record for namespace:%s key:%s at blockNumTranNum %v:%v\n",
+	fmt.Printf("Found history record for namespace:%s key:%s at blockNumTranNum %v:%v\n",
 		scanner.namespace, scanner.key, blockNum, tranNum)
 
 	logger.Debugf("Found history record for namespace:%s key:%s at blockNumTranNum %v:%v\n",

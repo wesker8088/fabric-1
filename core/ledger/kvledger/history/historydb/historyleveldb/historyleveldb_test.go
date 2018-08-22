@@ -365,7 +365,7 @@ func TestHistoryForKeyPage(t *testing.T) {
 
 		kmod, err4 := itr2.Next()
 		if err4 != nil {
-			t.Logf("err", err4)
+			t.Logf("err,%v", err4)
 		}
 		if kmod == nil {
 			fmt.Println("kmod is nil ")
@@ -376,7 +376,7 @@ func TestHistoryForKeyPage(t *testing.T) {
 		retrievedValue := kmod.(*queryresult.KeyModification).Value
 		retrievedTimestamp := kmod.(*queryresult.KeyModification).Timestamp
 		//retrievedIsDelete := kmod.(*queryresult.KeyModification).IsDelete
-		fmt.Println("Retrieved history record for key=key7 at TxId=%s with value %v and timestamp %v",
+		fmt.Printf("Retrieved history record for key=key7 at TxId=%s with value %v and timestamp %v",
 			txid, retrievedValue, retrievedTimestamp)
 		count++
 		/*if count != 5 {
