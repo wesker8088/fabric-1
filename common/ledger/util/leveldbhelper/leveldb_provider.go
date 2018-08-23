@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"fmt"
+
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 )
