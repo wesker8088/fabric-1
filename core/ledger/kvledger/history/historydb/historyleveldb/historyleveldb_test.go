@@ -351,11 +351,10 @@ func TestHistoryForKeyPage(t *testing.T) {
 	/*itr, err2 := qhistory.GetHistoryForKey("ns1", "key7")
 	testutil.AssertNoError(t, err2, "Error upon GetHistoryForKey()")*/
 
-	itr2, err3 := qhistory.GetHistoryForKeyByPage("ns1", "key7", 2, 1)
+	itr2, err3 := qhistory.GetHistoryForKeyByPage("ns1", "key7", 3, 2)
 	if itr2 == nil {
 		fmt.Println("itr2 is nill")
 	}
-
 	if err3 != nil {
 		t.Log("err3:", err3)
 	}
@@ -376,7 +375,7 @@ func TestHistoryForKeyPage(t *testing.T) {
 		retrievedValue := kmod.(*queryresult.KeyModification).Value
 		retrievedTimestamp := kmod.(*queryresult.KeyModification).Timestamp
 		//retrievedIsDelete := kmod.(*queryresult.KeyModification).IsDelete
-		fmt.Printf("Retrieved history record for key=key7 at TxId=%s with value %v and timestamp %v",
+		fmt.Printf("Retrieved history record for key=key7 at TxId=%s with value %v and timestamp %v \n",
 			txid, retrievedValue, retrievedTimestamp)
 		count++
 		/*if count != 5 {
