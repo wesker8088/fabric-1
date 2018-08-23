@@ -608,10 +608,8 @@ func (handler *Handler) handleGetHistoryForKey(key string, channelId string, txi
 	return nil, errors.Errorf("incorrect chaincode message %s received. Expecting %s or %s", responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR)
 }
 
-
-
 func (handler *Handler) handleGetHistoryForKeyByPage(key string, currentPage int64, pageSize int64, channelId string, txid string) (*pb.QueryResponse, error) {
-fmt.Println("#### shim handleGetHistoryForKeyByPage start #####")
+	fmt.Println("#### shim handleGetHistoryForKeyByPage start #####")
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error
@@ -657,7 +655,6 @@ fmt.Println("#### shim handleGetHistoryForKeyByPage start #####")
 	return nil, errors.Errorf("incorrect chaincode message %s received. Expecting %s or %s", responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR)
 
 }
-
 
 func (handler *Handler) createResponse(status int32, payload []byte) pb.Response {
 	return pb.Response{Status: status, Payload: payload}

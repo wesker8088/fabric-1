@@ -725,12 +725,10 @@ func (h *Handler) HandleGetHistoryForKey(msg *pb.ChaincodeMessage, txContext *Tr
 	return &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: payloadBytes, Txid: msg.Txid, ChannelId: msg.ChannelId}, nil
 }
 
-
 // Handles query to ledger history db
 // Add function query by page
 // by xiaozhun 20180817
 func (h *Handler) HandleGetHistoryForKeyByPage(msg *pb.ChaincodeMessage, txContext *TransactionContext) (*pb.ChaincodeMessage, error) {
-
 
 	fmt.Println(" ##### chaincode HandleGetHistoryForKeyByPage  #### ")
 

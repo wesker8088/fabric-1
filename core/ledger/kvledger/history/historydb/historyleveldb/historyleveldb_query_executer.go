@@ -19,6 +19,8 @@ package historyleveldb
 import (
 	"errors"
 
+	"fmt"
+
 	commonledger "github.com/hyperledger/fabric/common/ledger"
 	"github.com/hyperledger/fabric/common/ledger/blkstorage"
 	"github.com/hyperledger/fabric/common/ledger/util"
@@ -29,7 +31,6 @@ import (
 	"github.com/hyperledger/fabric/protos/ledger/queryresult"
 	putils "github.com/hyperledger/fabric/protos/utils"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
-	"fmt"
 )
 
 // LevelHistoryDBQueryExecutor is a query executor against the LevelDB history DB
@@ -55,9 +56,7 @@ func (q *LevelHistoryDBQueryExecutor) GetHistoryForKey(namespace string, key str
 	return newHistoryScanner(compositeStartKey, namespace, key, dbItr, q.blockStore), nil
 }
 
-
 func (q *LevelHistoryDBQueryExecutor) GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64) (commonledger.ResultsIterator, error) {
-
 
 	fmt.Println("#### query_executer :GetHistoryForKeyByPage start ##### ")
 

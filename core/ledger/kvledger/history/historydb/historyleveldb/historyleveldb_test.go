@@ -21,6 +21,8 @@ import (
 	"strconv"
 	"testing"
 
+	"fmt"
+
 	configtxtest "github.com/hyperledger/fabric/common/configtx/test"
 	"github.com/hyperledger/fabric/common/ledger/testutil"
 	util2 "github.com/hyperledger/fabric/common/util"
@@ -30,7 +32,6 @@ import (
 	"github.com/hyperledger/fabric/protos/ledger/queryresult"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/spf13/viper"
-	"fmt"
 )
 
 func TestMain(m *testing.M) {
