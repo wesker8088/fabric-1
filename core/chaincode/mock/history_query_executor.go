@@ -44,6 +44,12 @@ func (fake *HistoryQueryExecutor) GetHistoryForKey(namespace string, key string)
 	return fake.getHistoryForKeyReturns.result1, fake.getHistoryForKeyReturns.result2
 }
 
+func (fake *HistoryQueryExecutor) GetHistoryForKeyByPage(namespace string, key string, currentPage int64, pageSize int64) (commonledger.ResultsIterator, error) {
+	//TODO
+	//Implemention of mock GetHistoryForKeyByPage
+	return nil, nil
+}
+
 func (fake *HistoryQueryExecutor) GetHistoryForKeyCallCount() int {
 	fake.getHistoryForKeyMutex.RLock()
 	defer fake.getHistoryForKeyMutex.RUnlock()
