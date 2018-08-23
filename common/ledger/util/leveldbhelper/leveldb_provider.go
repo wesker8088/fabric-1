@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"sync"
 
+	"fmt"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
-	"fmt"
 )
 
 var dbNameKeySep = []byte{0x00}

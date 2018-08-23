@@ -22,11 +22,11 @@ import (
 
 	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/hyperledger/fabric/common/ledger/util"
+	"github.com/hyperledger/fabric/core/ledger/kvledger/history/historydb"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	goleveldbutil "github.com/syndtr/goleveldb/leveldb/util"
-	"github.com/hyperledger/fabric/core/ledger/kvledger/history/historydb"
 )
 
 var logger = flogging.MustGetLogger("leveldbhelper")
