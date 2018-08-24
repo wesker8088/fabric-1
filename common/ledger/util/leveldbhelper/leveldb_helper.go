@@ -177,7 +177,7 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 			if count == startIndex {
 				startKeyPage = itr.Key()
 				bl, tn := GetBlockInfo(startKeyPage)
-				fmt.Println("count 1.1 start :", count, " ,blockNo:", bl, " ,tranNo:", tn)
+				fmt.Println("count 1.2 start :", count, " ,blockNo:", bl, " ,tranNo:", tn)
 				break
 			}
 			count++
@@ -194,7 +194,7 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 			if count2 == endIndex {
 				endKeyPage = itr2.Key()
 				bl, tn := GetBlockInfo(endKeyPage)
-				fmt.Println("count 1.1 end :", count2, " ,blockNo:", bl, " ,tranNo:", tn)
+				fmt.Println("count 1.2 end :", count2, " ,blockNo:", bl, " ,tranNo:", tn)
 				break
 			}
 			count2++
@@ -208,6 +208,8 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 		fmt.Println("startKeyPage is nil ")
 		return nil
 	}
+
+	fmt.Println("#### leveldb_helper  :GetIteratorByPage end ##### ")
 
 	return dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKeyPage, Limit: endKeyPage}, dbInst.readOpts)
 
