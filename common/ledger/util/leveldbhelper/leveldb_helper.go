@@ -177,7 +177,7 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 			if count == startIndex {
 				startKeyPage = itr.Key()
 				bl, tn := GetBlockInfo(startKeyPage)
-				fmt.Println("count start :", count, " ,blockNo:", bl, " ,tranNo:", tn)
+				fmt.Println("count 1.1 start :", count, " ,blockNo:", bl, " ,tranNo:", tn)
 				break
 			}
 			count++
@@ -191,10 +191,10 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 	for {
 
 		if itr2.Next() {
-			if count2 == endIndex+1 {
+			if count2 == endIndex {
 				endKeyPage = itr2.Key()
 				bl, tn := GetBlockInfo(endKeyPage)
-				fmt.Println("count end :", count2, " ,blockNo:", bl, " ,tranNo:", tn)
+				fmt.Println("count 1.1 end :", count2, " ,blockNo:", bl, " ,tranNo:", tn)
 				break
 			}
 			count2++
