@@ -315,14 +315,14 @@ func (m *GetHistoryForKey) GetKey() string {
 
 type GetHistoryForKeyByPage struct {
 	Key         string `protobuf:"bytes,1,opt,name=key" json:"key,omitempty"`
-	CurrentPage int64  `protobuf:"bytes,1,opt,name=currentPage" json:"currentPage,omitempty"`
-	PageSize    int64  `protobuf:"bytes,1,opt,name=pageSize" json:"pageSize,omitempty"`
+	CurrentPage int64  `protobuf:"varint,2,opt,name=currentPage" json:"currentPage,omitempty"`
+	PageSize    int64  `protobuf:"varint,3,opt,name=pageSize" json:"pageSize,omitempty"`
 }
 
 func (m *GetHistoryForKeyByPage) Reset()                    { *m = GetHistoryForKeyByPage{} }
 func (m *GetHistoryForKeyByPage) String() string            { return proto.CompactTextString(m) }
 func (*GetHistoryForKeyByPage) ProtoMessage()               {}
-func (*GetHistoryForKeyByPage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{11} }
+func (*GetHistoryForKeyByPage) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *GetHistoryForKeyByPage) GetKey() string {
 	if m != nil {
@@ -352,7 +352,7 @@ type QueryStateNext struct {
 func (m *QueryStateNext) Reset()                    { *m = QueryStateNext{} }
 func (m *QueryStateNext) String() string            { return proto.CompactTextString(m) }
 func (*QueryStateNext) ProtoMessage()               {}
-func (*QueryStateNext) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{7} }
+func (*QueryStateNext) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{8} }
 
 func (m *QueryStateNext) GetId() string {
 	if m != nil {
@@ -368,7 +368,7 @@ type QueryStateClose struct {
 func (m *QueryStateClose) Reset()                    { *m = QueryStateClose{} }
 func (m *QueryStateClose) String() string            { return proto.CompactTextString(m) }
 func (*QueryStateClose) ProtoMessage()               {}
-func (*QueryStateClose) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{8} }
+func (*QueryStateClose) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{9} }
 
 func (m *QueryStateClose) GetId() string {
 	if m != nil {
@@ -384,7 +384,7 @@ type QueryResultBytes struct {
 func (m *QueryResultBytes) Reset()                    { *m = QueryResultBytes{} }
 func (m *QueryResultBytes) String() string            { return proto.CompactTextString(m) }
 func (*QueryResultBytes) ProtoMessage()               {}
-func (*QueryResultBytes) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{9} }
+func (*QueryResultBytes) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{10} }
 
 func (m *QueryResultBytes) GetResultBytes() []byte {
 	if m != nil {
@@ -402,7 +402,7 @@ type QueryResponse struct {
 func (m *QueryResponse) Reset()                    { *m = QueryResponse{} }
 func (m *QueryResponse) String() string            { return proto.CompactTextString(m) }
 func (*QueryResponse) ProtoMessage()               {}
-func (*QueryResponse) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{10} }
+func (*QueryResponse) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{11} }
 
 func (m *QueryResponse) GetResults() []*QueryResultBytes {
 	if m != nil {
