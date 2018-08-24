@@ -188,10 +188,16 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 
 	}
 
+	changeIndex := endIndex
+	if pageSize == 2 {
+		changeIndex = endIndex + 1
+	}
+
 	for {
 
 		if itr2.Next() {
-			if count2 == endIndex {
+
+			if count2 == changeIndex {
 				endKeyPage = itr2.Key()
 				bl, tn := GetBlockInfo(endKeyPage)
 				fmt.Println("count 1.2 end :", count2, " ,blockNo:", bl, " ,tranNo:", tn)
