@@ -609,7 +609,7 @@ func (handler *Handler) handleGetHistoryForKey(key string, channelId string, txi
 }
 
 func (handler *Handler) handleGetHistoryForKeyByPage(key string, currentPage int64, pageSize int64, channelId string, txid string) (*pb.QueryResponse, error) {
-	fmt.Println("#### shim handleGetHistoryForKeyByPage start #####")
+	fmt.Println("#### shim handleGetHistoryForKeyByPage start 11 #####")
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error
