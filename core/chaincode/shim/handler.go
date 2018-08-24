@@ -613,16 +613,21 @@ func (handler *Handler) handleGetHistoryForKeyByPage(key string, currentPage int
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error
+	fmt.Println("#### 0 #####")
+
 	if respChan, err = handler.createChannel(channelId, txid); err != nil {
 		chaincodeLogger.Errorf("[%s] Another state request pending for this Txid. Cannot process.", shorttxid(txid))
 		return nil, err
 	}
+	fmt.Println("#### 1 #####")
 
 	defer handler.deleteChannel(channelId, txid)
 	payloadBytes, _ := proto.Marshal(&pb.GetHistoryForKeyByPage{Key: key, CurrentPage: currentPage, PageSize: pageSize})
+	fmt.Println("#### 2 #####")
 
 	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE, Payload: payloadBytes, Txid: txid, ChannelId: channelId}
 	chaincodeLogger.Debugf("[%s] Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_HISTORY_FOR_KEY_BY_PAGE)
+	fmt.Println("#### 3 #####")
 
 	var responseMsg pb.ChaincodeMessage
 	fmt.Println("#### shim handler.sendReceive before #####")
