@@ -172,6 +172,8 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 	startIndex := (currentPage - 1) * pageSize
 	endIndex := currentPage*pageSize - 1
 
+	fmt.Printf("currentPage:%d,pageSize:%d --- startIndex:%d,endIndex:%d \n", currentPage, pageSize, startIndex, endIndex)
+
 	for {
 		if itr.Next() {
 			if count == startIndex {
