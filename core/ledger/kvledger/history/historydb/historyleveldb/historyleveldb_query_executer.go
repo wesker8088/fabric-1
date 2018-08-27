@@ -94,6 +94,11 @@ func (scanner *historyScanner) Next() (commonledger.QueryResult, error) {
 	}
 	historyKey := scanner.dbItr.Key() // history key is in the form namespace~key~blocknum~trannum
 
+	if err := historydb.CheckKeyValid(historyKey, scanner.compositePartialKey); err != nil {
+		logger.Debugf("Next() - historyKey nil or valid")
+		return nil, err
+	}
+
 	// SplitCompositeKey(namespace~key~blocknum~trannum, namespace~key~) will return the blocknum~trannum in second position
 	_, blockNumTranNumBytes := historydb.SplitCompositeHistoryKey(historyKey, scanner.compositePartialKey)
 	blockNum, bytesConsumed := util.DecodeOrderPreservingVarUint64(blockNumTranNumBytes[0:])

@@ -19,6 +19,7 @@ package historydb
 import (
 	"bytes"
 
+	"errors"
 	"github.com/hyperledger/fabric/common/ledger/util"
 )
 
@@ -55,6 +56,21 @@ func ConstructPartialCompositeHistoryKey(ns string, key string, endkey bool) []b
 
 //SplitCompositeHistoryKey splits the key bytes using a separator
 func SplitCompositeHistoryKey(bytesToSplit []byte, separator []byte) ([]byte, []byte) {
+
 	split := bytes.SplitN(bytesToSplit, separator, 2)
 	return split[0], split[1]
+}
+
+func CheckKeyValid(historyKey []byte, separator []byte) error {
+
+	if historyKey == nil {
+		return errors.New("historyKey is nil")
+	}
+	split := bytes.Split(historyKey, separator)
+	if len(split) != 2 {
+		return errors.New("historyKey valid")
+
+	}
+	return nil
+
 }
