@@ -215,7 +215,7 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 
 	fmt.Println("#### leveldb_helper  :GetIteratorByPage end ##### ")
 
-	return dbInst.db.NewIterator(&goleveldbutil.Range{Start: nil, Limit: nil}, dbInst.readOpts)
+	return dbInst.db.NewIterator(&goleveldbutil.Range{Start: startKeyPage, Limit: endKeyPage}, dbInst.readOpts)
 
 }
 

@@ -99,14 +99,6 @@ func (scanner *historyScanner) Next() (commonledger.QueryResult, error) {
 		fmt.Println("Next() - scanner.dbItr is nil")
 		return nil, nil
 	}
-	if !scanner.dbItr.Valid() {
-		fmt.Println("Next() - scanner.dbItr.First is not exist")
-		return nil, nil
-
-	} else {
-		fmt.Println("Next() - scanner.dbItr.First valid")
-
-	}
 
 	if !scanner.dbItr.Next() {
 		return nil, nil
