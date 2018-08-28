@@ -190,10 +190,7 @@ func (dbInst *DB) GetIteratorByPage(startKey []byte, endKey []byte, currentPage 
 
 	}
 
-	changeIndex := endIndex
-	if pageSize == 2 {
-		changeIndex = endIndex + 1
-	}
+	changeIndex := endIndex + 1
 
 	for {
 
