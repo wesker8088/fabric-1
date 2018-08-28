@@ -91,13 +91,21 @@ func newHistoryScanner(compositePartialKey []byte, namespace string, key string,
 func (scanner *historyScanner) Next() (commonledger.QueryResult, error) {
 
 	if scanner == nil {
-		logger.Debugf("Next() - scanner is nil")
+		fmt.Println("Next() - scanner is nil")
 		return nil, nil
 	}
 
 	if scanner.dbItr == nil {
-		logger.Debugf("Next() - scanner.dbItr is nil")
+		fmt.Println("Next() - scanner.dbItr is nil")
 		return nil, nil
+	}
+	if !scanner.dbItr.Valid() {
+		fmt.Println("Next() - scanner.dbItr.First is not exist")
+		return nil, nil
+
+	} else {
+		fmt.Println("Next() - scanner.dbItr.First valid")
+
 	}
 
 	if !scanner.dbItr.Next() {
